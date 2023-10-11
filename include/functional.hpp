@@ -77,7 +77,7 @@ namespace ft {
 	{
 		hash() {}
 		hash(const hash &) {}
-		std::size_t operator()(const Key &key) const;
+		size_t operator()(const Key &key) const;
 	};
 
 	template<> struct hash<bool> : public identity {};
@@ -101,7 +101,7 @@ namespace ft {
 	template< class T > struct hash<T*>;
 	template<> struct hash<std::string> {
 		// http://www.cse.yorku.ca/~oz/hash.html
-		std::size_t operator()(const std::string &key) const
+		size_t operator()(const std::string &key) const
 		{
 			unsigned long hash = 5381;
 //			int c;

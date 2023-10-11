@@ -47,7 +47,7 @@ template <
 		typedef typename allocator_type::template rebind<Node>::other				node_allocator;
 		typedef Node																*bucket_type;
 		typedef typename allocator_type::template rebind<bucket_type>::other		bucket_allocator;
-		typedef std::vector<bucket_type, bucket_allocator>							table_type;
+		typedef ft::vector<bucket_type, bucket_allocator>							table_type;
 		typedef typename table_type::iterator										bucket_iterator;
 		typedef typename table_type::const_iterator									const_bucket_iterator;
 
@@ -215,11 +215,11 @@ template <
 	private:
 		iterator get_it(size_t bucket, Node *current)
 		{
-			return iterator ((bucket_type *)this->table.data() + bucket, (bucket_type *)this->table.data() + this->table.size(), current);
+			return iterator ((bucket_type *)&this->table.front() + bucket, (bucket_type *)&this->table.front() + this->table.size(), current);
 		}
 		const_iterator get_it(size_t bucket, Node *current) const
 		{
-			return const_iterator ((bucket_type *)this->table.data() + bucket, (bucket_type *)this->table.data() + this->table.size(), current);
+			return const_iterator ((bucket_type *)&this->table.front() + bucket, (bucket_type *)&this->table.front() + this->table.size(), current);
 		}
 	public:
 
@@ -301,7 +301,7 @@ template <
 			{
 				it = find_in_bucket(bucket, value);
 				if (it != this->end(bucket) && !multi)
-					return ft::pair<iterator,bool>(iterator(this->table.begin().operator->() +  bucket, this->table.end().operator->(), it.current), false);
+					return ft::pair<iterator,bool>(iterator(&this->table.front() +  bucket, &this->table.front() + this->table.size(), it.current), false);
 				n = new_node((Node){it.current, value});
 				get_node_ref(get_it(bucket, it.current)) = n;
 			}
@@ -331,8 +331,8 @@ template <
 		iterator insert( const_iterator hint, const value_type& value )
 		{
 			this->check_load_factor(1);
-			if (hint != this->end() && this->bucket(KeyOfValue()(value)) == (size_type)(hint.current_bucket - this->table.data())) {
-				ft::pair<iterator, bool> ret = this->insert_in_bucket(hint.current_bucket - this->table.data(), value, hint.current_node);
+			if (hint != this->end() && this->bucket(KeyOfValue()(value)) == (size_type)(hint.current_bucket - &this->table.front())) {
+				ft::pair<iterator, bool> ret = this->insert_in_bucket(hint.current_bucket - &this->table.front(), value, hint.current_node);
 				if (ret.second)
 					return ret.first;
 			}
@@ -400,7 +400,7 @@ template <
 			iterator ret = ft::next(pos);
 
 			if (pos == this->begin())
-				this->_first_occupied_bucket = ret.current_bucket - this->table.data();
+				this->_first_occupied_bucket = ret.current_bucket - &this->table.front();
 
 			this->get_node_ref(pos) = pos.current_node->next;
 
@@ -415,7 +415,7 @@ template <
 				return last;
 
 			if (first == this->begin())
-				this->_first_occupied_bucket = last.current_bucket - this->table.data();
+				this->_first_occupied_bucket = last.current_bucket - &this->table.front();
 
 			if (first.current_bucket != last.current_bucket) {
 				this->get_node_ref(first) = NULL;
