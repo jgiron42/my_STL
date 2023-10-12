@@ -58,7 +58,7 @@ namespace container {
 	}
 
 	template <class C>
-	void reverse_iterators(C &a, C &b)
+	void reverse_iterators(C &a, C &)
 	{
 		FNAME
 		std::cout << "reverse_printing a" << std::endl;

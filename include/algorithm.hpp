@@ -166,7 +166,7 @@ namespace ft
 	InputIt find_if_not( InputIt first, InputIt last, UnaryPredicate q )
 	{
 		for (;first != last; first++)
-			if (!p(*first))
+			if (!q(*first))
 				return first;
 		return last;
 	}
