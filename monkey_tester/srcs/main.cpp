@@ -18,6 +18,9 @@
 # ifdef TEST_STACK
 #  include "stack.hpp"
 # endif
+# ifdef TEST_QUEUE
+#  include "queue.hpp"
+# endif
 # ifdef TEST_DEQUE
 #  include "deque.hpp"
 # endif
@@ -50,6 +53,9 @@
 # ifdef TEST_STACK
 #  include <stack>
 # endif
+# ifdef TEST_QUEUE
+#  include <queue>
+# endif
 # ifdef TEST_DEQUE
 #  include <deque>
 # endif
@@ -74,7 +80,7 @@
 #if defined (TEST_UNORDERED_SET) || defined(TEST_UNORDERED_MAP) || defined(TEST_UNORDERED_MULTISET) || defined(TEST_UNORDERED_MULTIMAP)
 # include "unordered_associative.hpp"
 #endif
-#if defined (TEST_VECTOR) || defined(TEST_DEQUE) || defined(TEST_LIST) || defined(TEST_XORLIST) || defined(TEST_STACK)
+#if defined (TEST_VECTOR) || defined(TEST_DEQUE) || defined(TEST_LIST) || defined(TEST_XORLIST) || defined(TEST_STACK) || defined(TEST_QUEUE)
 # include "list_specific.hpp"
 # include "sequence.hpp"
 #endif
@@ -167,6 +173,20 @@ void test_vector(size_t ntest)
 void test_stack(size_t ntest)
 {
 	typedef NAMESPACE::stack<std::string> C;
+	monkey::test_container<C> (
+			monkey::function_table<C>() +
+			container::default_constructor<C> +
+			container::empty<C> +
+			container::copy_constructor<C> +
+			container::operator_assign<C>
+			, ntest);
+}
+#endif
+
+#ifdef TEST_QUEUE
+void test_queue(size_t ntest)
+{
+	typedef NAMESPACE::queue<std::string> C;
 	monkey::test_container<C> (
 			monkey::function_table<C>() +
 			container::default_constructor<C> +
@@ -294,5 +314,9 @@ int main(int argc, char **argv)
 
 	#ifdef TEST_STACK
 	test_stack(ntest);
+	#endif
+
+	#ifdef TEST_QUEUE
+	test_queue(ntest);
 	#endif
 }

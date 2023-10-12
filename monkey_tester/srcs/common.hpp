@@ -211,6 +211,18 @@ namespace monkey {
 	}
 #endif
 
+#ifdef TEST_QUEUE
+	// specialization for stack
+	template<typename T, class C>
+	void print(const NAMESPACE::queue<T, C> &c) {
+		std::cout << "size: " << c.size() << std::endl;
+		std::cout << "content:" << std::endl;
+		NAMESPACE::queue<T, C> copy(c);
+		for (;!copy.empty(); copy.pop())
+			std::cout << "-> [" << copy.front() << "]" << std::endl;
+	}
+#endif
+
 	// pretty print name (with ==== on each side and in upper case)
 	void print_title(std::string name) {
 		int total_length = 80;
