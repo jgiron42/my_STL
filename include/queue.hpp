@@ -85,7 +85,6 @@ namespace ft {
 		typedef typename Container::const_reference	const_reference;
 		typedef Compare								value_compare;
 	protected:
-	public:
 		Compare		comp;
 		Container	c;
 	public:
