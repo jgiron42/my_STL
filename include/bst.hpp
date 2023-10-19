@@ -89,7 +89,6 @@ private:
 		node_type(const node_type &other) : node_type_base(other), value(other.value) {}
 		value_type value;
 	};
-public:
 	template<typename pointed_type>
 	struct iterator_t {
 		typedef ptrdiff_t difference_type;
@@ -136,6 +135,7 @@ public:
 		pointer operator->() const { return &static_cast<node_type*>(this->current)->value; }
 
 	};
+public:
 	template<typename LT, typename RT>
 	friend bool operator==(iterator_t<LT> l, iterator_t<RT> r) { return l.current == r.current; }
 
@@ -146,7 +146,7 @@ public:
 	typedef iterator_t<const value_type> const_iterator;
 	typedef ft::reverse_iterator<iterator> reverse_iterator;
 	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
-protected:
+private:
 	Compare compare;
 	value_compare _value_comp;
 	size_type _size;
@@ -259,10 +259,9 @@ public:
 
 	template<class InputIt>
 	void insert(InputIt f, InputIt l) {
-//		iterator tmp = this->begin();
+		iterator tmp = this->begin();
 		while (f != l) {
-			this->insert((value_type)*f);
-//			tmp = this->insert(tmp, (value_type)*f);
+			tmp = this->insert(tmp, (value_type)*f);
 			f++;
 		}
 	}
@@ -775,6 +774,22 @@ private:
 		else if (this->last == b)
 			this->last = a;
 	}
+
+	node_type_base *rotate(node_type_base *n, int direction)
+	{
+		int opposite = 1 - direction;
+		n->ptr() = n->childs[opposite];
+		n->childs[opposite]->p = n->p;
+		node_type_base *rl = n->childs[opposite]->childs[direction];
+		n->childs[opposite]->childs[direction] = n;
+		n->p = n->childs[opposite];
+		n->childs[opposite] = rl;
+		if (rl)
+			rl->p = n;
+		if (this->super_root.l == n->p)
+			this->assign_tree(n->p);
+		return n->p;
+	}
 public:
 #ifdef DEBUG_BST_HPP
 	template <class T>
@@ -877,21 +892,6 @@ public:
 				print_node(n->r, depth + 1, tmp);
 		}
 #endif
-		node_type_base *rotate(node_type_base *n, int direction)
-		{
-			int opposite = 1 - direction;
-			n->ptr() = n->childs[opposite];
-			n->childs[opposite]->p = n->p;
-			node_type_base *rl = n->childs[opposite]->childs[direction];
-			n->childs[opposite]->childs[direction] = n;
-			n->p = n->childs[opposite];
-			n->childs[opposite] = rl;
-			if (rl)
-				rl->p = n;
-			if (this->super_root.l == n->p)
-				this->assign_tree(n->p);
-			return n->p;
-		}
 };
 
 template<

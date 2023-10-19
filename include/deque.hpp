@@ -26,7 +26,6 @@ namespace ft {
 		typedef typename Allocator::pointer 		pointer;
 		typedef typename Allocator::const_pointer	const_pointer;
 	private:
-	public:
 
 		template<typename pointed_type>
 		struct iterator_t {
@@ -122,8 +121,8 @@ namespace ft {
 			}
 			friend iterator_t operator+(difference_type n, iterator_t it) {return it + n;}
 			friend iterator_t operator-(iterator_t it, difference_type n) {return it + -n;}
-
 		};
+		public:
 		template<typename LT, typename RT>
 		friend difference_type operator-(iterator_t<LT> lhs, iterator_t<RT> rhs) {
 			return ((typename iterator_t<LT>::pointer *)lhs.node - (typename iterator_t<LT>::pointer *)rhs.node) * lhs.node_size + (lhs.current - rhs.current);
@@ -315,18 +314,14 @@ namespace ft {
 		void internal_insert(It2 pos, It f, It l, It2 current_end, size_t count)
 		{
 			It2 new_end = current_end + count;
-//			std::cout << "node: " << it1.node << " current: " << it1.current << " " << it1.operator->() << std::endl;
 			It2 it1 = current_end - 1;
 			It2 it2 = new_end - 1;
-//			std::cout << "node: " << it2.node << " current: " << it2.current << " " << it2.operator->() << std::endl;
 			while (it1 >= pos)
 			{
 				if (it2 < current_end)
 					*it2 = *it1;
 				else
 					this->construct(it2.operator->(), 1, *it1);
-//				std::cout << "it1 node: " << *it1.node << " current: " << it1.current << std::endl;
-//				std::cout << "it2 node: " << *it2.node << " current: " << it2.current << std::endl;
 				--it1;
 				--it2;
 			}
@@ -378,7 +373,6 @@ namespace ft {
 				for (it1 = f, it2 = l; it2 < this->end(); it1++, it2++)
 					*it1 = *it2;
 				if (it2.node > it1.node) {
-//					std::cout << "erase: " <<  (difference_type)it1.node_size - (difference_type)it1.current - 1 << std::endl;
 					this->destroy(it1.operator->(), (difference_type) it1.node_size - (difference_type) it1.current);
 					this->erase_node(it1.node + 1, this->last.node + 1);
 				} else
@@ -468,16 +462,13 @@ namespace ft {
 		}
 		void	add_nodes_back(difference_type count)
 		{
-//			std::cout << "new nodes: " << count << std::endl;
 			if (this->map + this->map_capacity - (this->last.node + 1) < count)
 				this->reserve_map(this->map_capacity + count * 2);
 
 			difference_type last_node = this->last.node - this->map;
-//			std::cout << last_node << " " << this->last.current << std::endl;
 			while (this->map[last_node]) {
 				last_node++;
 			}
-//			std::cout  << last_node << std::endl;
 			for (difference_type i = 0; i < count; i++)
 			{
 				this->map[last_node + i] = this->allocator.allocate(this->node_size);
@@ -591,7 +582,8 @@ namespace ft {
 	}
 
 	template< class T, class Alloc >
-	void swap( ft::deque<T, Alloc>& lhs,
+	void swap( ft::deque<T, Alloc>& lhs,//			std::cout  << last_node << std::
+
 			   ft::deque<T, Alloc>& rhs)
 	{
 		lhs.swap(rhs);

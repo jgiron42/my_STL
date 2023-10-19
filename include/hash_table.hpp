@@ -154,7 +154,7 @@ template <
 
 		typedef iterator_t<value_type> iterator;
 		typedef iterator_t<const value_type> const_iterator;
-	protected:
+	private:
 		table_type		table;
 		node_allocator 	_node_allocator;
 		size_t			_size;
@@ -273,21 +273,6 @@ template <
 			return it;
 		}
 
-		Node			*new_node(const Node &val)
-		{
-			Node *ret = this->_node_allocator.allocate(1);
-			this->_node_allocator.construct(ret, val);
-			this->_size++;
-			return ret;
-		}
-
-		void	destroy_node(Node &node)
-		{
-			this->_node_allocator.destroy(static_cast<Node*>(&node));
-			this->_node_allocator.deallocate(static_cast<Node*>(&node), 1);
-			this->_size--;
-		}
-
 		ft::pair<iterator,bool> insert_in_bucket( size_type bucket, const value_type& value, local_iterator hint = NULL)
 		{
 			local_iterator it;
@@ -354,46 +339,7 @@ template <
 		{
 			return this->erase(const_iterator(pos));
 		}
-	private:
-		Node	*&get_node_ref(const_iterator pos)
-		{
 
-			if (pos.current_node == *pos.current_bucket)
-				return *pos.current_bucket;
-			else {
-				const_iterator it(pos);
-				it.current_node = *it.current_bucket;
-				while (it.current_node && it.current_node->next != pos.current_node)
-					it++;
-				return it.current_node->next;
-			}
-		}
-
-		void	destroy_list(Node *n)
-		{
-			while (n)
-			{
-				Node *tmp = n;
-				n = n->next;
-				destroy_node(*tmp);
-			}
-		}
-
-		Node	*copy_list(Node *n)
-		{
-			if (!n)
-				return NULL;
-			n = new_node(*n);
-			Node *head = n;
-			while (head->next)
-			{
-				head->next = new_node(*head->next);
-				head = head->next;
-			}
-			return n;
-		}
-
-	public:
 
 		iterator erase( const_iterator pos )
 		{
@@ -637,6 +583,59 @@ template <
 		key_equal key_eq() const
 		{
 			return this->_key_equal;
+		}
+	private:
+		Node	*&get_node_ref(const_iterator pos)
+		{
+
+			if (pos.current_node == *pos.current_bucket)
+				return *pos.current_bucket;
+			else {
+				const_iterator it(pos);
+				it.current_node = *it.current_bucket;
+				while (it.current_node && it.current_node->next != pos.current_node)
+					it++;
+				return it.current_node->next;
+			}
+		}
+
+		void	destroy_list(Node *n)
+		{
+			while (n)
+			{
+				Node *tmp = n;
+				n = n->next;
+				destroy_node(*tmp);
+			}
+		}
+
+		Node	*copy_list(Node *n)
+		{
+			if (!n)
+				return NULL;
+			n = new_node(*n);
+			Node *head = n;
+			while (head->next)
+			{
+				head->next = new_node(*head->next);
+				head = head->next;
+			}
+			return n;
+		}
+		
+		Node			*new_node(const Node &val)
+		{
+			Node *ret = this->_node_allocator.allocate(1);
+			this->_node_allocator.construct(ret, val);
+			this->_size++;
+			return ret;
+		}
+
+		void	destroy_node(Node &node)
+		{
+			this->_node_allocator.destroy(static_cast<Node*>(&node));
+			this->_node_allocator.deallocate(static_cast<Node*>(&node), 1);
+			this->_size--;
 		}
 	};
 

@@ -65,8 +65,6 @@ namespace ft {
 		rhs.swap(lhs);
 	}
 
-
-
 	template<
 			class Key,
 			class T,

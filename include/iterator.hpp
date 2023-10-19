@@ -252,15 +252,21 @@ namespace ft {
 			this->pos += n;
 			return *this;
 		}
-		friend generator_it operator+(generator_it it, difference_type n)
-		{
-			it += n;
-			return it;
-		}
-		friend generator_it operator+(difference_type n, generator_it it) {return it + n;}
-		friend generator_it operator-(generator_it it, difference_type n) {return it + -n;}
 
 	};
+	template <typename T>
+	generator_it<T> operator+(generator_it<T> it, typename generator_it<T>::difference_type n)
+	{
+		it += n;
+		return it;
+	}
+
+	template <typename T>
+	generator_it<T> operator+(typename generator_it<T>::difference_type n, generator_it<T> it) {return it + n;}
+
+	template <typename T>
+	generator_it<T> operator-(generator_it<T> it, typename generator_it<T>::difference_type n) {return it + -n;}
+
 	template<typename LT, typename RT>
 	typename generator_it<LT>::difference_type operator-(generator_it<LT> lhs, generator_it<RT> rhs) {
 		return lhs.pos - rhs.pos;

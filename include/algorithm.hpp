@@ -131,17 +131,6 @@ namespace ft
 			else
 				pos++;
 		}
-//		typename ft::iterator_traits<RandomIt>::difference_type pos = last - first;
-//		while (pos >= 0) {
-//			typename ft::iterator_traits<RandomIt>::difference_type left = (pos + 1) * 2;
-//			typename ft::iterator_traits<RandomIt>::difference_type right = (pos + 1) * 2 - 1;
-//
-//			if (((left < last - first) && (!comp(first[pos], first[left]))) ||
-//				((right < last - first) && !comp(first[pos], first[right]))) {
-//				heapify(first, last, pos, comp);
-//			}
-//			pos--;
-//		}
 	}
 
 	template< class InputIt, class T >

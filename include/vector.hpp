@@ -16,18 +16,16 @@ namespace ft {
 	>
 	class vector {
 	public:
-		typedef T value_type;
-		typedef Allocator allocator_type;
-		typedef size_t size_type;
-		typedef ptrdiff_t difference_type;
-		typedef value_type &reference;
-		typedef const value_type &const_reference;
-		typedef typename Allocator::pointer pointer;
-		typedef typename Allocator::const_pointer const_pointer;
-	private:
-	public:
+		typedef T										value_type;
+		typedef Allocator								allocator_type;
+		typedef size_t									size_type;
+		typedef ptrdiff_t								difference_type;
+		typedef value_type								&reference;
+		typedef const value_type						&const_reference;
+		typedef typename Allocator::pointer				pointer;
+		typedef typename Allocator::const_pointer		const_pointer;
 		typedef pointer									iterator;
-		typedef const value_type *						const_iterator;
+		typedef const_pointer							const_iterator;
 		typedef ft::reverse_iterator<iterator>			reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 	private:
@@ -37,33 +35,41 @@ namespace ft {
 		allocator_type	allocator;
 	public:
 		vector() : data(NULL), _size(0), _capacity(0), allocator() {}
+
 		explicit vector( const Allocator& alloc ) : data(NULL), _size(0), _capacity(0), allocator(alloc) {}
+		
 		explicit vector( size_type count,
 					   const T& value = T(),
 					   const Allocator& alloc = Allocator()) : data(NULL), _size(0), _capacity(0), allocator(alloc) {
 			this->insert(this->end(), count, value);
 		}
+
 		template< class InputIt >
 		vector( InputIt f, InputIt l, const Allocator& alloc = Allocator()) : data(NULL), _size(0), _capacity(0), allocator(alloc)
 		{
 			this->insert(this->end(), f, l);
 		}
+
 		vector( const vector& other ) : data(NULL), _size(0), _capacity(0), allocator(other.allocator) {
 			this->insert(this->end(), other.begin(), other.end());
 		}
+
 		~vector()
 		{
 			this->clear();
 			this->free();
 		}
+
 		vector& operator=( const vector& other ) {
 			this->assign(other.begin(), other.end());
 			return *this;
 		}
+
 		void assign( size_type count, const T& value ) {
 			this->clear();
 			this->insert(this->begin(), count, value);
 		}
+
 		template< class InputIt >
 		void assign( InputIt f, InputIt l )
 		{
